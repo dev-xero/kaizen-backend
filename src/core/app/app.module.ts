@@ -6,6 +6,7 @@ import compression from 'compression';
 import cors from 'cors';
 import express, { NextFunction, Request, Response } from 'express';
 import helmet from 'helmet';
+import cached from 'src/middleware/cache';
 
 export async function StartApplication() {
     const app = express();
@@ -34,7 +35,7 @@ export async function StartApplication() {
     });
 
     // Base endpoint
-    app.use('/', (_: Request, res: Response) => {
+    app.use('/', cached('5 minutes'), (_: Request, res: Response) => {
         res.status(http.OK).json({
             status: 'success',
             message:

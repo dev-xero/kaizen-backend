@@ -1,9 +1,10 @@
 import corsOptions from '@config/cors';
 import { env } from '@config/variables';
+import http from '@constants/http';
 import logger from '@utils/logger';
 import compression from 'compression';
 import cors from 'cors';
-import express from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import helmet from 'helmet';
 
 export async function StartApplication() {
@@ -18,6 +19,29 @@ export async function StartApplication() {
     app.use(express.urlencoded({ extended: false }));
 
     app.use(express.json());
+
+    // Decline malformed json request bodies
+    app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+        if (err instanceof SyntaxError) {
+            res.status(http.BAD_REQUEST).json({
+                status: 'error',
+                message: 'Malformed json received.',
+                code: http.BAD_REQUEST,
+            });
+        }
+
+        next();
+    });
+
+    // Base endpoint
+    app.use('/', (_: Request, res: Response) => {
+        res.status(http.OK).json({
+            status: 'success',
+            message:
+                'All systems functional, prefix endpoints with v1 to access the API.',
+            code: http.OK,
+        });
+    });
 
     app.listen(port, () =>
         logger.info(

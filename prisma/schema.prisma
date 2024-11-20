@@ -1,0 +1,65 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Priority level enum
+enum PriorityLevel {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+// Database user schema
+model User {
+  id          Int              @unique @default(autoincrement())
+  username    String           @unique
+  email       String           @unique
+  password    String
+  joinedOn    DateTime
+  lastActive  DateTime
+  tasks       Task[]           @relation("UserTasks")
+  memberships TeamMembership[]
+}
+
+// Database task schema
+model Task {
+  id            Int           @id @default(autoincrement())
+  userId        Int
+  teamId        Int?
+  assignedTo    User          @relation(fields: [userId], references: [id], name: "UserTasks")
+  team          Team?         @relation(fields: [teamId], references: [id], name: "TeamTasks")
+  name          String
+  description   String
+  priorityLevel PriorityLevel
+  priorityHex   String
+  tags          String[]
+  dueOn         DateTime
+  createdAt     DateTime
+  isCompleted   Boolean
+}
+
+// Database teams schema
+model Team {
+  id          Int              @unique @default(autoincrement())
+  name        String
+  description String
+  createdOn   DateTime
+  memberships TeamMembership[]
+  tasks       Task[]           @relation("TeamTasks")
+}
+
+// Database team membership junction-table
+model TeamMembership {
+  id     Int  @id @default(autoincrement())
+  userId Int
+  teamId Int
+  user   User @relation(fields: [userId], references: [id])
+  team   Team @relation(fields: [teamId], references: [id])
+
+  @@unique([userId, teamId]) // user cannot join the same team multiple times
+}

@@ -23,7 +23,9 @@
             "@config/*": ["src/config/*"],
             "@constants/*": ["src/constants/*"],
             "@core/*": ["src/core/*"],
+            "@errors/*": ["src/errors/*"],
             "@providers/*": ["src/providers/*"],
+            "@middleware/*": ["src/middleware/*"],
             "@utils/*": ["src/utils/*"]
         }
     },

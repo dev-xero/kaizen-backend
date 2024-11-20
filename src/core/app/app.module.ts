@@ -1,10 +1,13 @@
-import corsOptions from '@config/cors';
 import { env } from '@config/variables';
+import express, { NextFunction, Request, Response } from 'express';
+
+import corsOptions from '@config/cors';
 import http from '@constants/http';
+import globalErrorHandler from '@middleware/errorhandler';
+import notFoundHandler from '@middleware/notfound';
 import logger from '@utils/logger';
 import compression from 'compression';
 import cors from 'cors';
-import express, { NextFunction, Request, Response } from 'express';
 import helmet from 'helmet';
 import cached from 'src/middleware/cache';
 
@@ -43,6 +46,9 @@ export async function startApplication() {
             code: http.OK,
         });
     });
+
+    app.use(notFoundHandler);
+    app.use(globalErrorHandler);
 
     app.listen(port, () =>
         logger.info(

@@ -1,13 +1,14 @@
 import { NextFunction, Request, Response } from 'express';
 
 import http from '@constants/http';
-import { makeURLSafe } from '@utils/transformer';
+import { makeURLSafe, obfuscateEmail } from '@utils/transformer';
 import userHelper from '@helpers/user.helper';
 import { BadRequestError } from '@errors/badrequest.error';
 import passwordHelper from '@helpers/password.helper';
 import tokenHelper from '@helpers/token.helper';
 import { InternalServerError } from '@errors/internal.error';
 import logger from '@utils/logger';
+import { sanitize } from '@utils/sanitizer';
 
 /**
  * Processes signup requests.
@@ -42,7 +43,14 @@ export async function signup(req: Request, res: Response, next: NextFunction) {
     // Hash user password
     const hashedPassword = passwordHelper.hash(password);
 
-    // Generate tokens and save to redis
+    // Create the user
+    const newUser = await userHelper.createUser({
+        username: urlSafeUsername,
+        password: hashedPassword,
+        email,
+    });
+
+    // Generate tokens
     const [accessToken, refreshToken] =
         tokenHelper.generateTokens(urlSafeUsername);
 
@@ -51,11 +59,26 @@ export async function signup(req: Request, res: Response, next: NextFunction) {
         throw new InternalServerError('Failed to generate user tokens.');
     }
 
+    // Save refresh token to redis
+    await tokenHelper.saveRefreshToken(urlSafeUsername, refreshToken);
+
     // Request is complete
     logger.info('Successfully registered a new user.');
 
-    res.status(http.OK).json({
+    res.status(http.CREATED).json({
         status: 'success',
-        message: 'Yet to be implemented.',
+        message: 'Successfully signed up, please verify your email address.',
+        code: http.CREATED,
+        data: {
+            ...sanitize(newUser, [
+                'password',
+                'email',
+                'lastActive',
+                'joinedOn',
+            ]),
+            obfuscatedEmail: obfuscateEmail(email),
+            accessToken,
+            refreshToken,
+        },
     });
 }

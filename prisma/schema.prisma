@@ -17,14 +17,15 @@ enum PriorityLevel {
 
 // Database user schema
 model User {
-  id          Int              @unique @default(autoincrement())
-  username    String           @unique
-  email       String           @unique
-  password    String
-  joinedOn    DateTime
-  lastActive  DateTime
-  tasks       Task[]           @relation("UserTasks")
-  memberships TeamMembership[]
+  id              Int              @unique @default(autoincrement())
+  username        String           @unique
+  email           String           @unique
+  password        String
+  isEmailVerified Boolean          @default(false)
+  joinedOn        DateTime
+  lastActive      DateTime
+  tasks           Task[]           @relation("UserTasks")
+  memberships     TeamMembership[]
 }
 
 // Database task schema

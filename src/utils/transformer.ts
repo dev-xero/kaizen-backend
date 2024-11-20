@@ -33,3 +33,26 @@ export function makeURLSafe(unsafe: string): string {
 
     return safeString;
 }
+
+/**
+ * Replaces character in an email with asterisks to improve
+ * anonymity.
+ *
+ * @param email Email to obfuscate.
+ * @returns An obfuscated email.
+ */
+export function obfuscateEmail(email: string): string {
+    const namePart = email.split('@')[0];
+    const domainPart = email.split('@')[1];
+
+    const obfuscationLength = Math.max(0, Math.min(namePart.length - 3, 3));
+
+    const obfuscatedNamePart = `${namePart.slice(
+        0,
+        obfuscationLength
+    )}${'*'.repeat(namePart.length - obfuscationLength)}`;
+
+    const obfuscatedEmail = `${obfuscatedNamePart}@${domainPart}`;
+
+    return obfuscatedEmail;
+}

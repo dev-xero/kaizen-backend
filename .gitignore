@@ -34,3 +34,6 @@ docker-compose.override.yml
 .vscode/
 *.swp
 .history/
+
+# pems
+ca.pem

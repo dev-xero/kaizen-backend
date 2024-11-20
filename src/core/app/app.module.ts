@@ -10,6 +10,7 @@ import compression from 'compression';
 import cors from 'cors';
 import helmet from 'helmet';
 import cached from 'src/middleware/cache';
+import { authRouter } from '@core/auth';
 
 export async function startApplication() {
     const app = express();
@@ -36,6 +37,8 @@ export async function startApplication() {
 
         next();
     });
+
+    app.use('/v1/auth', authRouter);
 
     // Base endpoint
     app.use('/', cached('5 minutes'), (_: Request, res: Response) => {

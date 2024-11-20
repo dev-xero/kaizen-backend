@@ -8,7 +8,7 @@ import express, { NextFunction, Request, Response } from 'express';
 import helmet from 'helmet';
 import cached from 'src/middleware/cache';
 
-export async function StartApplication() {
+export async function startApplication() {
     const app = express();
     const port = env.app.port;
 

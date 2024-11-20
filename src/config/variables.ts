@@ -18,4 +18,8 @@ export const env = Object.freeze({
         },
     },
     redisURI: process.env.REDIS_URI,
+    tokens: {
+        accessKey: process.env.ACCESS_TOKEN_SECRET
+        refreshKey: process.env.REFRESH_TOKEN_SECRET,
+    },
 });

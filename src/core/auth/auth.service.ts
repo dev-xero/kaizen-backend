@@ -5,6 +5,9 @@ import { makeURLSafe } from '@utils/transformer';
 import userHelper from '@helpers/user.helper';
 import { BadRequestError } from '@errors/badrequest.error';
 import passwordHelper from '@helpers/password.helper';
+import tokenHelper from '@helpers/token.helper';
+import { InternalServerError } from '@errors/internal.error';
+import logger from '@utils/logger';
 
 /**
  * Processes signup requests.
@@ -39,8 +42,17 @@ export async function signup(req: Request, res: Response, next: NextFunction) {
     // Hash user password
     const hashedPassword = passwordHelper.hash(password);
 
-    // Generate access and refresh tokens
-    
+    // Generate tokens and save to redis
+    const [accessToken, refreshToken] =
+        tokenHelper.generateTokens(urlSafeUsername);
+
+    // These tokens must have been generated
+    if (!(accessToken && refreshToken)) {
+        throw new InternalServerError('Failed to generate user tokens.');
+    }
+
+    // Request is complete
+    logger.info('Successfully registered a new user.');
 
     res.status(http.OK).json({
         status: 'success',

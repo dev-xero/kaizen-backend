@@ -26,6 +26,7 @@
             "@errors/*": ["src/errors/*"],
             "@providers/*": ["src/providers/*"],
             "@middleware/*": ["src/middleware/*"],
+            "@schemas/*": ["src/schemas/*"],
             "@utils/*": ["src/utils/*"]
         }
     },

@@ -41,7 +41,7 @@ export async function startApplication() {
     app.use('/v1/auth', authRouter);
 
     // Base endpoint
-    app.use('/', cached('5 minutes'), (_: Request, res: Response) => {
+    app.get('/', cached('5 minutes'), (_: Request, res: Response) => {
         res.status(http.OK).json({
             status: 'success',
             message:

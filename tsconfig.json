@@ -24,6 +24,7 @@
             "@constants/*": ["src/constants/*"],
             "@core/*": ["src/core/*"],
             "@errors/*": ["src/errors/*"],
+            "@helpers/*": ["src/helpers/*"],
             "@providers/*": ["src/providers/*"],
             "@middleware/*": ["src/middleware/*"],
             "@schemas/*": ["src/schemas/*"],

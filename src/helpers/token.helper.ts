@@ -56,8 +56,10 @@ class TokenHelper {
 
     // Saves a username-refresh token entry
     public async saveRefreshToken(username: string, token: string) {
-        await redisProvider.client.set(username, token);
-        await redisProvider.client.expire(username, 172800); // expires in 2 days
+        const key = `refresh:${username}`;
+
+        await redisProvider.client.hSet(key, username, token);
+        await redisProvider.client.expire(key, 172800); // expires in 2 days
     }
 
     // Saves a username-verification code entry

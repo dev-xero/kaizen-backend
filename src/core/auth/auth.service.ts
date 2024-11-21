@@ -9,6 +9,7 @@ import tokenHelper from '@helpers/token.helper';
 import { InternalServerError } from '@errors/internal.error';
 import logger from '@utils/logger';
 import { sanitize } from '@utils/sanitizer';
+import emailHelper from '@helpers/email.helper';
 
 /**
  * Processes signup requests.
@@ -62,6 +63,9 @@ export async function signup(req: Request, res: Response, next: NextFunction) {
     // Save refresh token to redis
     await tokenHelper.saveRefreshToken(urlSafeUsername, refreshToken);
 
+    // Generate verification link and send email
+    await sendVerificationEmail(urlSafeUsername, email);
+
     // Request is complete
     logger.info('Successfully registered a new user.');
 
@@ -81,4 +85,19 @@ export async function signup(req: Request, res: Response, next: NextFunction) {
             refreshToken,
         },
     });
+}
+
+// Generates and sends a verification email after sign up.
+async function sendVerificationEmail(name: string, email: string) {
+    const verificationLink = await userHelper.generateVerificationLink(name);
+    const recipients = [{ email, name }];
+    const subject = `Welcome to Kaizen ${name}!`;
+
+    const templateData = { verificationLink };
+
+    await emailHelper.sendUserVerificationEmail(
+        recipients,
+        subject,
+        templateData
+    );
 }

@@ -78,14 +78,20 @@ class EmailHelper {
 
             return parsedHTML;
         } catch (err) {
-            logger.error(err);
+            console.error(err);
             throw new InternalServerError(
                 'Unable to complete email sending request.'
             );
         }
     }
 
-    // Handles sending text emails
+    /**
+     * Asynchronously sends a text email.
+     *
+     * @param recipients An array of email recipients which is a map of email and names.
+     * @param subject The email subject.
+     * @param text The email text.
+     */
     public async sendTextEmail(
         recipients: EmailRecipient[],
         subject: string,
@@ -107,16 +113,25 @@ class EmailHelper {
             .setText(text);
 
         await this.mailService.email.send(emailParameters);
+
+        logger.info('Successfully sent text email.');
     }
 
-    // Handles sending HTML emails
+    /**
+     * Asynchronously sends a html email.
+     *
+     * @param recipients An array of email recipients which is a map of email and names.
+     * @param subject The email subject.
+     * @param htmlpath Path to the html file under the `templates` directory
+     * @param templateData Handlebars compilable template data (nullable).
+     */
     public async sendHTMLEmail(
         recipients: EmailRecipient[],
         subject: string,
         htmlpath: string,
         templateData: any | null = null
     ) {
-        if (!(subject.trim().length == 0 && htmlpath.trim().length == 0)) {
+        if (subject.trim().length == 0 && htmlpath.trim().length == 0) {
             throw new UnprocessableError(
                 'Provide both a subject and html path to send email.'
             );
@@ -135,7 +150,13 @@ class EmailHelper {
         await this.mailService.email.send(emailParameters);
     }
 
-    // Sends user verification emails
+    /**
+     * Asynchronously sends a user verification email.
+     *
+     * @param recipients An array of email recipients which is a map of email and names.
+     * @param subject The email subject.
+     * @param templateData Handlebars compilable template data.
+     */
     public async sendUserVerificationEmail(
         recipients: EmailRecipient[],
         subject: string,
@@ -147,6 +168,8 @@ class EmailHelper {
             'mail.html', // default verification email file name
             templateData
         );
+
+        logger.info('Successfully sent verification email.');
     }
 }
 

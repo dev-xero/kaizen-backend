@@ -16,7 +16,8 @@ function globalErrorHandler(
             code: err.statusCode,
         });
     } else {
-        logger.error(err);
+        // logger.error(err);
+        console.error(err);
         res.status(http.INTERNAL_SERVER_ERROR).json({
             status: 'server_error',
             message: 'Something went wrong internally.',

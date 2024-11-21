@@ -4,7 +4,7 @@
             <mj-all font-family="inter, helvetica, arial, sans-serif" />
             <mj-body background-color="#ffffff" />
             <mj-section background-color="#ffffff" />
-            <mj-column padding="0 20px" />
+            <mj-column padding="0 8px" />
         </mj-attributes>
         <mj-style>
             /* Forces background to remain white in dark mode */ @media

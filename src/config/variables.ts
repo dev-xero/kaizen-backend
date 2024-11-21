@@ -16,15 +16,17 @@ export const env = Object.freeze({
             isInProduction: environment.PROD == process.env.ENVIRONMENT,
             isInDevelopment: environment.DEV == process.env.ENVIRONMENT,
         },
+        deployedURL: process.env.DEPLOYED_URL,
     },
     redisURI: process.env.REDIS_URI,
     tokens: {
         accessKey: process.env.ACCESS_TOKEN_SECRET,
         refreshKey: process.env.REFRESH_TOKEN_SECRET,
+        emailKey: process.env.EMAIL_VERIFICATION_SECRET,
     },
     mailerSendKey: process.env.MAILSERVICE_API_KEY,
     kaizen: {
         email: process.env.KAIZEN_EMAIL,
-        emailName: process.env.KAIZEN_EMAIL_NAME
-    }
+        emailName: process.env.KAIZEN_EMAIL_NAME,
+    },
 });

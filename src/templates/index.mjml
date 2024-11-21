@@ -1,0 +1,49 @@
+<mjml>
+    <mj-body>
+        <mj-section>
+            <mj-column>
+                <mj-image
+                    width="140px"
+                    src="https://i.postimg.cc/x84xNKNs/kaizen.png"
+                ></mj-image>
+
+                <mj-text
+                    font-size="32px"
+                    font-weight="bold"
+                    color="#12111A"
+                    font-family="inter"
+                    line-height="40px"
+                    >Welcome to Kaizen</mj-text
+                >
+
+                <mj-text
+                    font-size="20px"
+                    color="#3F3C66"
+                    font-family="inter"
+                    line-height="28px"
+                >
+                    Welcome to Kaizen — the minimal Japanese-inspired task
+                    management web app for humans. Please use this
+                    <a
+                        href="{{verificationLink}}"
+                        style="color: #7c3aed; text-decoration: underline"
+                        >link</a
+                    >
+                    to to verify your account and get started.
+                </mj-text>
+
+                <mj-text
+                    font-size="18px"
+                    color="#3F3C66"
+                    font-family="inter"
+                    line-height="26px"
+                    >This link expires in <b>24 hours.</b></mj-text
+                >
+
+                <mj-text font-size="18px" color="#3F3C66" font-family="inter"
+                    >The Kaizen Team.</mj-text
+                >
+            </mj-column>
+        </mj-section>
+    </mj-body>
+</mjml>

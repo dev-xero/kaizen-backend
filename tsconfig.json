@@ -28,6 +28,7 @@
             "@providers/*": ["src/providers/*"],
             "@middleware/*": ["src/middleware/*"],
             "@schemas/*": ["src/schemas/*"],
+            "@templates/*": ["src/templates/*"],
             "@utils/*": ["src/utils/*"]
         }
     },

@@ -49,15 +49,15 @@
 
                 <mj-text
                     css-class="dark-mode-text"
-                    font-size="18px"
+                    font-size="14px"
                     color="#3F3C66"
-                    line-height="26px"
+                    line-height="18px"
                     >This link expires in <b>24 hours.</b></mj-text
                 >
 
                 <mj-text
                     css-class="dark-mode-text"
-                    font-size="18px"
+                    font-size="16px"
                     color="#3F3C66"
                     >The Kaizen Team.</mj-text
                 >

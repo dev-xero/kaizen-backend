@@ -15,6 +15,7 @@ type EmailRecipient = {
 
 type VerificationEmailTemplate = {
     verificationLink: string;
+    username: string;
 };
 
 // Email sending helper

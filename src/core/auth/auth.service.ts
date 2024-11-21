@@ -45,7 +45,7 @@ export async function signup(req: Request, res: Response, next: NextFunction) {
     const hashedPassword = passwordHelper.hash(password);
 
     // Create the user
-    const newUser = await userHelper.createUser({
+    await userHelper.createUser({
         username: urlSafeUsername,
         password: hashedPassword,
         email,
@@ -74,12 +74,6 @@ export async function signup(req: Request, res: Response, next: NextFunction) {
         message: 'Successfully signed up, please verify your email address.',
         code: http.CREATED,
         data: {
-            ...sanitize(newUser, [
-                'password',
-                'email',
-                'lastActive',
-                'joinedOn',
-            ]),
             obfuscatedEmail: obfuscateEmail(email),
             accessToken,
             refreshToken,
@@ -93,7 +87,7 @@ async function sendVerificationEmail(name: string, email: string) {
     const recipients = [{ email, name }];
     const subject = `Welcome to Kaizen ${name}!`;
 
-    const templateData = { verificationLink };
+    const templateData = { username: name, verificationLink };
 
     await emailHelper.sendUserVerificationEmail(
         recipients,

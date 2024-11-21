@@ -86,19 +86,43 @@
                 }
             }
         </style>
+        <style type="text/css">
+            /* Forces background to remain white in dark mode */
+            @media (prefers-color-scheme: dark) {
+                body,
+                .email-body {
+                    background-color: #ffffff !important;
+                }
+
+                .dark-mode-text {
+                    color: #12111a !important;
+                }
+            }
+        </style>
     </head>
 
-    <body style="word-spacing: normal">
-        <div style="">
-            <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" class="" style="width:600px;" width="600" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
-            <div style="margin: 0px auto; max-width: 600px">
+    <body style="word-spacing: normal; background-color: #ffffff">
+        <div class="email-body" style="background-color: #ffffff">
+            <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" class="" style="width:600px;" width="600" bgcolor="#ffffff" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+            <div
+                style="
+                    background: #ffffff;
+                    background-color: #ffffff;
+                    margin: 0px auto;
+                    max-width: 600px;
+                "
+            >
                 <table
                     align="center"
                     border="0"
                     cellpadding="0"
                     cellspacing="0"
                     role="presentation"
-                    style="width: 100%"
+                    style="
+                        background: #ffffff;
+                        background-color: #ffffff;
+                        width: 100%;
+                    "
                 >
                     <tbody>
                         <tr>
@@ -127,17 +151,14 @@
                                         cellpadding="0"
                                         cellspacing="0"
                                         role="presentation"
-                                        style="vertical-align: top"
                                         width="100%"
                                     >
                                         <tbody>
                                             <tr>
                                                 <td
-                                                    align="center"
                                                     style="
-                                                        font-size: 0px;
-                                                        padding: 10px 25px;
-                                                        word-break: break-word;
+                                                        vertical-align: top;
+                                                        padding: 0 20px;
                                                     "
                                                 >
                                                     <table
@@ -145,140 +166,206 @@
                                                         cellpadding="0"
                                                         cellspacing="0"
                                                         role="presentation"
-                                                        style="
-                                                            border-collapse: collapse;
-                                                            border-spacing: 0px;
-                                                        "
+                                                        style=""
+                                                        width="100%"
                                                     >
                                                         <tbody>
                                                             <tr>
                                                                 <td
+                                                                    align="center"
                                                                     style="
-                                                                        width: 140px;
+                                                                        font-size: 0px;
+                                                                        padding: 10px
+                                                                            25px;
+                                                                        word-break: break-word;
                                                                     "
                                                                 >
-                                                                    <img
-                                                                        height="auto"
-                                                                        src="https://i.postimg.cc/x84xNKNs/kaizen.png"
+                                                                    <table
+                                                                        border="0"
+                                                                        cellpadding="0"
+                                                                        cellspacing="0"
+                                                                        role="presentation"
                                                                         style="
-                                                                            border: 0;
-                                                                            display: block;
-                                                                            outline: none;
-                                                                            text-decoration: none;
-                                                                            height: auto;
-                                                                            width: 100%;
-                                                                            font-size: 13px;
+                                                                            border-collapse: collapse;
+                                                                            border-spacing: 0px;
                                                                         "
-                                                                        width="140"
-                                                                    />
+                                                                    >
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <td
+                                                                                    style="
+                                                                                        width: 140px;
+                                                                                    "
+                                                                                >
+                                                                                    <img
+                                                                                        height="auto"
+                                                                                        src="https://i.imgur.com/BEBmLrZ.png"
+                                                                                        style="
+                                                                                            border: 0;
+                                                                                            display: block;
+                                                                                            outline: none;
+                                                                                            text-decoration: none;
+                                                                                            height: auto;
+                                                                                            width: 100%;
+                                                                                            font-size: 13px;
+                                                                                        "
+                                                                                        width="140"
+                                                                                    />
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td
+                                                                    align="center"
+                                                                    class="dark-mode-text"
+                                                                    style="
+                                                                        font-size: 0px;
+                                                                        padding: 10px
+                                                                            25px;
+                                                                        word-break: break-word;
+                                                                    "
+                                                                >
+                                                                    <div
+                                                                        style="
+                                                                            font-family: inter,
+                                                                                helvetica,
+                                                                                arial,
+                                                                                sans-serif;
+                                                                            font-size: 24px;
+                                                                            font-weight: bold;
+                                                                            line-height: 32px;
+                                                                            text-align: center;
+                                                                            color: #12111a;
+                                                                        "
+                                                                    >
+                                                                        Welcome
+                                                                        to
+                                                                        Kaizen
+                                                                        {{username}}
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td
+                                                                    align="left"
+                                                                    class="dark-mode-text"
+                                                                    style="
+                                                                        font-size: 0px;
+                                                                        padding: 10px
+                                                                            25px;
+                                                                        word-break: break-word;
+                                                                    "
+                                                                >
+                                                                    <div
+                                                                        style="
+                                                                            font-family: inter,
+                                                                                helvetica,
+                                                                                arial,
+                                                                                sans-serif;
+                                                                            font-size: 16px;
+                                                                            line-height: 24px;
+                                                                            text-align: left;
+                                                                            color: #3f3c66;
+                                                                        "
+                                                                    >
+                                                                        Welcome
+                                                                        to
+                                                                        Kaizen —
+                                                                        the
+                                                                        minimal
+                                                                        Japanese-inspired
+                                                                        task
+                                                                        management
+                                                                        web app
+                                                                        for
+                                                                        humans.
+                                                                        Please
+                                                                        use this
+                                                                        <a
+                                                                            href="{{verificationLink}}"
+                                                                            style="
+                                                                                color: #7c3aed;
+                                                                                text-decoration: underline;
+                                                                            "
+                                                                            >link</a
+                                                                        >
+                                                                        to
+                                                                        verify
+                                                                        your
+                                                                        account
+                                                                        and get
+                                                                        started.
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td
+                                                                    align="left"
+                                                                    class="dark-mode-text"
+                                                                    style="
+                                                                        font-size: 0px;
+                                                                        padding: 10px
+                                                                            25px;
+                                                                        word-break: break-word;
+                                                                    "
+                                                                >
+                                                                    <div
+                                                                        style="
+                                                                            font-family: inter,
+                                                                                helvetica,
+                                                                                arial,
+                                                                                sans-serif;
+                                                                            font-size: 18px;
+                                                                            line-height: 26px;
+                                                                            text-align: left;
+                                                                            color: #3f3c66;
+                                                                        "
+                                                                    >
+                                                                        This
+                                                                        link
+                                                                        expires
+                                                                        in
+                                                                        <b
+                                                                            >24
+                                                                            hours.</b
+                                                                        >
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td
+                                                                    align="left"
+                                                                    class="dark-mode-text"
+                                                                    style="
+                                                                        font-size: 0px;
+                                                                        padding: 10px
+                                                                            25px;
+                                                                        word-break: break-word;
+                                                                    "
+                                                                >
+                                                                    <div
+                                                                        style="
+                                                                            font-family: inter,
+                                                                                helvetica,
+                                                                                arial,
+                                                                                sans-serif;
+                                                                            font-size: 18px;
+                                                                            line-height: 1;
+                                                                            text-align: left;
+                                                                            color: #3f3c66;
+                                                                        "
+                                                                    >
+                                                                        The
+                                                                        Kaizen
+                                                                        Team.
+                                                                    </div>
                                                                 </td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td
-                                                    align="left"
-                                                    style="
-                                                        font-size: 0px;
-                                                        padding: 10px 25px;
-                                                        word-break: break-word;
-                                                    "
-                                                >
-                                                    <div
-                                                        style="
-                                                            font-family: inter;
-                                                            font-size: 32px;
-                                                            font-weight: bold;
-                                                            line-height: 40px;
-                                                            text-align: left;
-                                                            color: #12111a;
-                                                        "
-                                                    >
-                                                        Welcome to Kaizen
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td
-                                                    align="left"
-                                                    style="
-                                                        font-size: 0px;
-                                                        padding: 10px 25px;
-                                                        word-break: break-word;
-                                                    "
-                                                >
-                                                    <div
-                                                        style="
-                                                            font-family: inter;
-                                                            font-size: 20px;
-                                                            line-height: 28px;
-                                                            text-align: left;
-                                                            color: #3f3c66;
-                                                        "
-                                                    >
-                                                        Welcome to Kaizen — the
-                                                        minimal
-                                                        Japanese-inspired task
-                                                        management web app for
-                                                        humans. Please use this
-                                                        <a
-                                                            href="{{verificationLink}}"
-                                                            style="
-                                                                color: #7c3aed;
-                                                                text-decoration: underline;
-                                                            "
-                                                            >link</a
-                                                        >
-                                                        to to verify your
-                                                        account and get started.
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td
-                                                    align="left"
-                                                    style="
-                                                        font-size: 0px;
-                                                        padding: 10px 25px;
-                                                        word-break: break-word;
-                                                    "
-                                                >
-                                                    <div
-                                                        style="
-                                                            font-family: inter;
-                                                            font-size: 18px;
-                                                            line-height: 26px;
-                                                            text-align: left;
-                                                            color: #3f3c66;
-                                                        "
-                                                    >
-                                                        This link expires in
-                                                        <b>24 hours.</b>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td
-                                                    align="left"
-                                                    style="
-                                                        font-size: 0px;
-                                                        padding: 10px 25px;
-                                                        word-break: break-word;
-                                                    "
-                                                >
-                                                    <div
-                                                        style="
-                                                            font-family: inter;
-                                                            font-size: 18px;
-                                                            line-height: 1;
-                                                            text-align: left;
-                                                            color: #3f3c66;
-                                                        "
-                                                    >
-                                                        The Kaizen Team.
-                                                    </div>
                                                 </td>
                                             </tr>
                                         </tbody>

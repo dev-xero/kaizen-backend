@@ -1,26 +1,41 @@
 <mjml>
-    <mj-body>
-        <mj-section>
+    <mj-head>
+        <mj-attributes>
+            <mj-all font-family="inter, helvetica, arial, sans-serif" />
+            <mj-body background-color="#ffffff" />
+            <mj-section background-color="#ffffff" />
+            <mj-column padding="0 20px" />
+        </mj-attributes>
+        <mj-style>
+            /* Forces background to remain white in dark mode */ @media
+            (prefers-color-scheme: dark) { body, .email-body { background-color:
+            #ffffff !important; } .dark-mode-text { color: #12111A !important; }
+            }
+        </mj-style>
+    </mj-head>
+    <mj-body css-class="email-body">
+        <mj-section padding="20px 0">
             <mj-column>
                 <mj-image
+                    align="center"
                     width="140px"
-                    src="https://i.postimg.cc/x84xNKNs/kaizen.png"
+                    src="https://i.imgur.com/BEBmLrZ.png"
                 ></mj-image>
 
                 <mj-text
-                    font-size="32px"
+                    css-class="dark-mode-text"
+                    font-size="24px"
                     font-weight="bold"
                     color="#12111A"
-                    font-family="inter"
-                    line-height="40px"
-                    >Welcome to Kaizen</mj-text
+                    line-height="32px"
+                    align="center"
+                    >Welcome to Kaizen {{username}}</mj-text
                 >
-
                 <mj-text
-                    font-size="20px"
+                    css-class="dark-mode-text"
+                    font-size="16px"
                     color="#3F3C66"
-                    font-family="inter"
-                    line-height="28px"
+                    line-height="24px"
                 >
                     Welcome to Kaizen — the minimal Japanese-inspired task
                     management web app for humans. Please use this
@@ -29,18 +44,21 @@
                         style="color: #7c3aed; text-decoration: underline"
                         >link</a
                     >
-                    to to verify your account and get started.
+                    to verify your account and get started.
                 </mj-text>
 
                 <mj-text
+                    css-class="dark-mode-text"
                     font-size="18px"
                     color="#3F3C66"
-                    font-family="inter"
                     line-height="26px"
                     >This link expires in <b>24 hours.</b></mj-text
                 >
 
-                <mj-text font-size="18px" color="#3F3C66" font-family="inter"
+                <mj-text
+                    css-class="dark-mode-text"
+                    font-size="18px"
+                    color="#3F3C66"
                     >The Kaizen Team.</mj-text
                 >
             </mj-column>

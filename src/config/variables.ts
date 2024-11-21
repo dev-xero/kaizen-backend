@@ -22,4 +22,9 @@ export const env = Object.freeze({
         accessKey: process.env.ACCESS_TOKEN_SECRET,
         refreshKey: process.env.REFRESH_TOKEN_SECRET,
     },
+    mailerSendKey: process.env.MAILSERVICE_API_KEY,
+    kaizen: {
+        email: process.env.KAIZEN_EMAIL,
+        emailName: process.env.KAIZEN_EMAIL_NAME
+    }
 });

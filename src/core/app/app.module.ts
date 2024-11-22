@@ -1,4 +1,5 @@
 import { env } from '@config/variables';
+import { authRouter } from '@core/auth';
 import express, { NextFunction, Request, Response } from 'express';
 
 import corsOptions from '@config/cors';
@@ -6,15 +7,15 @@ import http from '@constants/http';
 import globalErrorHandler from '@middleware/errorhandler';
 import notFoundHandler from '@middleware/notfound';
 import logger from '@utils/logger';
+import apicache from 'apicache';
 import compression from 'compression';
 import cors from 'cors';
 import helmet from 'helmet';
-import cached from 'src/middleware/cache';
-import { authRouter } from '@core/auth';
 
 export async function startApplication() {
     const app = express();
     const port = env.app.port;
+    const cache = apicache.middleware;
 
     app.disable('x-powered-by');
 
@@ -41,7 +42,7 @@ export async function startApplication() {
     app.use('/v1/auth', authRouter);
 
     // Base endpoint
-    app.get('/', cached('5 minutes'), (_: Request, res: Response) => {
+    app.get('/', cache('5 minutes'), (_: Request, res: Response) => {
         res.status(http.OK).json({
             status: 'success',
             message:

@@ -51,6 +51,15 @@ export async function startApplication() {
         });
     });
 
+    // Health check
+    app.get('/v1/health', cache('5 minutes'), (_: Request, res: Response) => {
+        res.status(http.OK).json({
+            status: 'success',
+            message: 'API is healthy.',
+            code: http.OK,
+        });
+    });
+
     app.use(notFoundHandler);
     app.use(globalErrorHandler);
 

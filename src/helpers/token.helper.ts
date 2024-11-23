@@ -58,7 +58,7 @@ class TokenHelper {
     public async saveRefreshToken(username: string, token: string) {
         const key = `refresh:${username}`;
 
-        await redisProvider.client.hSet(key, username, token);
+        await redisProvider.client.hset(key, username, token);
         await redisProvider.client.expire(key, 172800); // expires in 2 days
     }
 
@@ -66,7 +66,7 @@ class TokenHelper {
     public async saveVerificationCode(username: string, code: string) {
         const key = `verification:${username}`;
 
-        await redisProvider.client.hSet(key, 'code', code);
+        await redisProvider.client.hset(key, 'code', code);
         await redisProvider.client.expire(key, 86400); // expires in 24 hours
     }
 }

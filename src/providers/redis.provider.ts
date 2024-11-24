@@ -17,14 +17,14 @@ class RedisProvider {
 
         this.redisClient = new Redis(env.redisURI);
 
-        this.redisClient.on('error', (err: any) => {
-            logger.error('Failed to connect Redis.');
-            throw err;
-        });
-
         this.redisClient.on('connect', () => {
             logger.info('Redis connected successfully.');
             callback();
+        });
+
+        this.redisClient.on('error', (err: any) => {
+            logger.error('Failed to connect Redis.');
+            throw err;
         });
     }
 }

@@ -12,13 +12,15 @@ class DatabaseProvider {
         return this.prismaClient;
     }
 
-    public async connect() {
+    public async connect(callback: any) {
         await this.prismaClient.$connect().catch((err) => {
             logger.error('Database connection failed.');
             throw err;
         });
 
         logger.info('Database connected successfully.');
+
+        callback();
     }
 }
 

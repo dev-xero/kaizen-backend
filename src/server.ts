@@ -5,8 +5,8 @@ import logger from '@utils/logger';
 
 async function initializeConnections() {
     try {
-        await databaseProvider.connect();
-        await redisProvider.connect(startApplication); // as a callback
+        await redisProvider.connect();
+        await databaseProvider.connect(startApplication); // as a callback
     } catch (err) {
         logger.error(err);
         logger.warn('Terminating.');

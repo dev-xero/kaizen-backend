@@ -10,7 +10,7 @@ class RedisProvider {
         return this.redisClient;
     }
 
-    public async connect(callback: any) {
+    public async connect() {
         if (!env.redisURI) {
             throw new InternalServerError('Redis URI is not defined.');
         }
@@ -19,7 +19,6 @@ class RedisProvider {
 
         this.redisClient.on('connect', () => {
             logger.info('Redis connected successfully.');
-            callback();
         });
 
         this.redisClient.on('error', (err: any) => {

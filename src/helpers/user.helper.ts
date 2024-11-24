@@ -3,10 +3,10 @@ import { InternalServerError } from '@errors/internal.error';
 import { User } from '@prisma/client';
 
 import databaseProvider from '@providers/database.provider';
-import redisProvider from '@providers/redis.provider';
 import logger from '@utils/logger';
 import crypto from 'node:crypto';
 import tokenHelper from './token.helper';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 class UserHelper {
     private dbClient = databaseProvider.client;
@@ -33,8 +33,12 @@ class UserHelper {
 
             return record != null;
         } catch (err) {
-            logger.error(err);
-            throw err;
+            if (!(err instanceof PrismaClientKnownRequestError)) {
+                logger.error(err);
+                throw err;
+            }
+
+            return false;
         }
     }
 
@@ -44,7 +48,7 @@ class UserHelper {
      * @param newUser Credentials of the user to create
      * @returns A user record which sensitive details should be omitted from
      */
-    public async createUser(newUser: Partial<User>): Promise<User> {
+    public async createUser(newUser: Partial<User>): Promise<User | null> {
         try {
             if (!(newUser.username && newUser.password && newUser.email)) {
                 throw new InternalServerError(
@@ -65,8 +69,12 @@ class UserHelper {
 
             return record;
         } catch (err) {
-            logger.error(err);
-            throw err;
+            if (!(err instanceof PrismaClientKnownRequestError)) {
+                logger.error(err);
+                throw err;
+            }
+
+            return null;
         }
     }
 

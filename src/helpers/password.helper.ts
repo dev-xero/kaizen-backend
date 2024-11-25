@@ -7,12 +7,23 @@ class PasswordHelper {
         this.rounds = rounds;
     }
 
-    // Hashes plaintext
+    /**
+     * Hashes a plain text and returns the result.
+     *
+     * @param plain Plain text to hash.
+     * @returns Hashed variant of the plain text.
+     */
     public hash(plain: string): string {
         return bcrypt.hashSync(plain, this.rounds);
     }
 
-    // Matches hashed string against plain text
+    /**
+     * Compares a hash and plain text for matches.
+     *
+     * @param hash Hashed string to compare with.
+     * @param plain Plain text variant.
+     * @returns True if the plain text matches the hash, false otherwise.
+     */
     public matches(hash: string, plain: string): boolean {
         return bcrypt.compareSync(plain, hash);
     }

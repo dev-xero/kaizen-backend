@@ -8,7 +8,13 @@ import crypto from 'node:crypto';
 class TokenHelper {
     constructor() {}
 
-    // Generates an access and refresh token from a username
+    /**
+     * Generates a refresh and optionally access token from a username.
+     *
+     * @param username Username to sign tokens with.
+     * @param withAccess Boolean specifying whether to generate a signed access token with it.
+     * @returns An array containing the refresh token and/or access token.
+     */
     public generateTokens(username: string, withAccess = false) {
         if (!env.tokens.accessKey || !env.tokens.refreshKey) {
             throw new InternalServerError(
@@ -33,7 +39,12 @@ class TokenHelper {
         return withAccess ? [accessToken, refreshToken] : [refreshToken];
     }
 
-    // Verify token by comparing against secret key
+    /**
+     * Verifies access tokens for sensitive endpoints.
+     *
+     * @param accessToken Access token to verify.
+     * @returns The jwt payload if the access token is valid.
+     */
     public async verityToken(accessToken: string): Promise<null | any> {
         try {
             const secret = env.tokens.accessKey;
@@ -50,14 +61,24 @@ class TokenHelper {
         }
     }
 
-    // Retrieve refresh token
+    /**
+     * Asynchronously attempts to retrieve a saved refresh token for a user.
+     *
+     * @param username Username to query for.
+     * @returns Refresh token for the user if it exists, null otherwise.
+     */
     public async retrieveRefreshToken(
         username: string
     ): Promise<string | null> {
         return await redisProvider.client.get(username);
     }
 
-    // Saves a username-refresh token entry
+    /**
+     * Asynchronously saves a refresh token to redis.
+     *
+     * @param username Username to save the refresh token with.
+     * @param token Token value.
+     */
     public async saveRefreshToken(username: string, token: string) {
         const key = `refresh:${username}`;
 
@@ -65,7 +86,12 @@ class TokenHelper {
         await redisProvider.client.expire(key, 172800); // expires in 2 days
     }
 
-    // Saves a username-verification code entry
+    /**
+     * Asynchronously saves an email verification code to redis, mapped to a username.
+     *
+     * @param username Username to save the code with.
+     * @param code Email verification code.
+     */
     public async saveEmailVerificationCode(username: string, code: string) {
         const key = `verification:${username}`;
 
@@ -73,7 +99,12 @@ class TokenHelper {
         await redisProvider.client.expire(key, 86400); // TTL is 24 hours
     }
 
-    // Retrieves a verification code from redis is present
+    /**
+     * Asynchronously retrieves an email verification code from redis.
+     *
+     * @param username Username the code was saved with.
+     * @returns A string representing the code or null if non-existent.
+     */
     public async getEmailVerificationCode(
         username: string
     ): Promise<string | null> {
@@ -81,7 +112,11 @@ class TokenHelper {
         return await redisProvider.client.hget(key, 'code'); // retrieve only the key field
     }
 
-    // Deletes a verification code entry
+    /**
+     * Asynchronously deletes a verification code from redis.
+     *
+     * @param username Username to delete from.
+     */
     public async deleteVerificationCode(username: string) {
         const key = `verification:${username}`;
         await redisProvider.client.del(key);

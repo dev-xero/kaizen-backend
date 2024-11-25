@@ -1,6 +1,7 @@
+import { signInSchema } from '@schemas/signin.schema';
 import { signUpSchema } from '@schemas/signup.schema';
 import { Router } from 'express';
-import { signup } from './auth.service';
+import { signin, signup } from './auth.service';
 
 import rateLimited from '@middleware/ratelimit';
 import validated from '@middleware/validator';
@@ -13,4 +14,11 @@ authRouter.post(
     rateLimited,
     validated(signUpSchema),
     asyncHandler(signup)
+);
+
+authRouter.post(
+    '/signin',
+    rateLimited,
+    validated(signInSchema),
+    asyncHandler(signin)
 );

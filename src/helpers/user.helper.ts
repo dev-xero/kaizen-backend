@@ -85,6 +85,28 @@ class UserHelper {
     }
 
     /**
+     * Queries the database for a user with the specified email address.
+     *
+     * @param email Email address to query with.
+     * @returns A user row obj with this email address if it exists, null otherwise.
+     */
+    public async findUserWithEmail(email: string): Promise<User | null> {
+        try {
+            const record = await this.dbClient.user.findUnique({
+                where: { email },
+            });
+
+            return record;
+        } catch (err) {
+            if (!(err instanceof PrismaClientKnownRequestError)) {
+                logger.error(err);
+                throw err;
+            }
+            return null;
+        }
+    }
+
+    /**
      * Updates the user row with the specified details.
      *
      * @param where Unique identifier for the user (either id, username or email).
@@ -112,8 +134,6 @@ class UserHelper {
                 where: validatedWhere,
                 data: newDetails,
             });
-
-            logger.info('Successfully verified user account.');
 
             return record;
         } catch (err) {

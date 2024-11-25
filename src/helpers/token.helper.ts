@@ -84,7 +84,7 @@ class TokenHelper {
     // Deletes a verification code entry
     public async deleteVerificationCode(username: string) {
         const key = `verification:${username}`;
-        await redisProvider.client.hdel(key);
+        await redisProvider.client.del(key);
     }
 }
 

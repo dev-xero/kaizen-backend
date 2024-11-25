@@ -1,9 +1,11 @@
 import { env } from '@config/variables';
 import { BadRequestError } from '@errors/badrequest.error';
 import { InternalServerError } from '@errors/internal.error';
+import { NextFunction, Request, Response } from 'express';
+
 import tokenHelper from '@helpers/token.helper';
 import userHelper from '@helpers/user.helper';
-import { NextFunction, Request, Response } from 'express';
+import logger from '@utils/logger';
 
 /**
  * Processes email verification requests.
@@ -18,9 +20,18 @@ import { NextFunction, Request, Response } from 'express';
  */
 export async function verify(req: Request, res: Response, next: NextFunction) {
     const { username, code } = req.query;
+    const clientURL = env.app.clientURL;
 
     if (!(username && code)) {
-        throw new BadRequestError('URL is malformed.');
+        res.redirect(`${clientURL}/email/notverified`);
+        logger.warn('url is malformed, denying verification.');
+        return;
+    }
+
+    if (!clientURL) {
+        throw new InternalServerError(
+            'Client URL key is missing or not configured.'
+        );
     }
 
     const savedVerificationCode = await tokenHelper.getEmailVerificationCode(
@@ -28,7 +39,9 @@ export async function verify(req: Request, res: Response, next: NextFunction) {
     );
 
     if (savedVerificationCode != code) {
-        throw new BadRequestError('Email not verified.');
+        res.redirect(`${clientURL}/email/notverified`);
+        logger.warn('verification code mismatch, denying verification.');
+        return;
     }
 
     // Update user to become verified
@@ -39,14 +52,8 @@ export async function verify(req: Request, res: Response, next: NextFunction) {
         }
     );
 
-    // delete verification code
+    // Delete verification code
     await tokenHelper.deleteVerificationCode(username as string);
-
-    const clientURL = env.app.clientURL;
-
-    if (!clientURL) {
-        throw new InternalServerError('Client URL key is missing.');
-    }
 
     res.redirect(`${clientURL}/auth/login`);
 }

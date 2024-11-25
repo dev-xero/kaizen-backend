@@ -43,6 +43,7 @@ These scripts need execution permission which you can grant using `chmod +x <pat
 | HOSTNAME | localhost | The hostname of the deployed instance or localhost. |
 | ENVIRONMENT | dev | The environment the server is running from. |
 | DEPLOYED_URL | http://localhost:8080/v1 | Full URL of the deployed instance or localhost, prefixed with `v1`. |
+| CLIENT_URL | http://localhost:3000 | FUll URL of the deployed web client. |
 | DATABASE_URL | | PostgreSQL database connection URL (pooled). |
 | DIRECT_URL | | PostgreSQL non-pooled connection URL. |
 | REDIS_URI | | Redis server connection URI. |

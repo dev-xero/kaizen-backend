@@ -9,7 +9,7 @@ class TokenHelper {
     constructor() {}
 
     // Generates an access and refresh token from a username
-    public generateTokens(username: string) {
+    public generateTokens(username: string, withAccess = false) {
         if (!env.tokens.accessKey || !env.tokens.refreshKey) {
             throw new InternalServerError(
                 'Access or refresh token secret key is missing.'
@@ -17,17 +17,20 @@ class TokenHelper {
         }
 
         const payload = { username };
+        let accessToken = null;
 
-        const accessToken = jwt.sign(payload, env.tokens.accessKey, {
-            expiresIn: '1h',
-        });
+        if (withAccess) {
+            accessToken = jwt.sign(payload, env.tokens.accessKey, {
+                expiresIn: '1h',
+            });
+        }
 
         const refreshToken = crypto
             .createHash('sha-256')
             .update(`${env.tokens.refreshKey}@${username}:${Date.now()}`)
             .digest('base64url');
 
-        return [accessToken, refreshToken];
+        return withAccess ? [accessToken, refreshToken] : [refreshToken];
     }
 
     // Verify token by comparing against secret key
@@ -63,11 +66,25 @@ class TokenHelper {
     }
 
     // Saves a username-verification code entry
-    public async saveVerificationCode(username: string, code: string) {
+    public async saveEmailVerificationCode(username: string, code: string) {
         const key = `verification:${username}`;
 
         await redisProvider.client.hset(key, 'code', code);
-        await redisProvider.client.expire(key, 86400); // expires in 24 hours
+        await redisProvider.client.expire(key, 86400); // TTL is 24 hours
+    }
+
+    // Retrieves a verification code from redis is present
+    public async getEmailVerificationCode(
+        username: string
+    ): Promise<string | null> {
+        const key = `verification:${username}`;
+        return await redisProvider.client.hget(key, 'code'); // retrieve only the key field
+    }
+
+    // Deletes a verification code entry
+    public async deleteVerificationCode(username: string) {
+        const key = `verification:${username}`;
+        await redisProvider.client.hdel(key);
     }
 }
 

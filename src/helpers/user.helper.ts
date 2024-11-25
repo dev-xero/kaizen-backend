@@ -1,12 +1,18 @@
 import { env } from '@config/variables';
 import { InternalServerError } from '@errors/internal.error';
-import { User } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 
 import databaseProvider from '@providers/database.provider';
 import logger from '@utils/logger';
 import crypto from 'node:crypto';
 import tokenHelper from './token.helper';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+
+type UniqueIdentifier = {
+    id?: number;
+    email?: string;
+    username?: string;
+};
 
 class UserHelper {
     private dbClient = databaseProvider.client;
@@ -79,6 +85,48 @@ class UserHelper {
     }
 
     /**
+     * Updates the user row with the specified details.
+     *
+     * @param where Unique identifier for the user (either id, username or email).
+     * @param newDetails Details to update.
+     * @returns Promises an updated user object.
+     */
+    public async updateUser(
+        where: UniqueIdentifier,
+        newDetails: Partial<User>
+    ): Promise<User | null> {
+        try {
+            if (!where.username && !where.email) {
+                throw new InternalServerError(
+                    'Username or email should at least be specified.'
+                );
+            }
+
+            const validatedWhere: Prisma.UserWhereUniqueInput = {
+                id: where.id,
+                username: where.username,
+                email: where.email,
+            };
+
+            const record = await this.dbClient.user.update({
+                where: validatedWhere,
+                data: newDetails,
+            });
+
+            logger.info('Successfully verified user account.');
+
+            return record;
+        } catch (err) {
+            if (!(err instanceof PrismaClientKnownRequestError)) {
+                logger.error(err);
+                throw err;
+            }
+
+            return null;
+        }
+    }
+
+    /**
      * Generates a unique verification link for a user and saves it to redis.
      * The link expires in 24 hours.
      *
@@ -104,7 +152,10 @@ class UserHelper {
 
         try {
             // Save this verification code to redis
-            await tokenHelper.saveVerificationCode(username, verificationCode);
+            await tokenHelper.saveEmailVerificationCode(
+                username,
+                verificationCode
+            );
 
             logger.info('Successfully generated user verification code.');
 

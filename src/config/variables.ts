@@ -17,6 +17,7 @@ export const env = Object.freeze({
             isInDevelopment: environment.DEV == process.env.ENVIRONMENT,
         },
         deployedURL: process.env.DEPLOYED_URL,
+        clientURL: process.env.CLIENT_URL,
     },
     redisURI: process.env.REDIS_URI,
     tokens: {

@@ -8,7 +8,6 @@ import passwordHelper from '@helpers/password.helper';
 import tokenHelper from '@helpers/token.helper';
 import { InternalServerError } from '@errors/internal.error';
 import logger from '@utils/logger';
-import { sanitize } from '@utils/sanitizer';
 import emailHelper from '@helpers/email.helper';
 
 /**
@@ -52,11 +51,10 @@ export async function signup(req: Request, res: Response, next: NextFunction) {
     });
 
     // Generate tokens
-    const [accessToken, refreshToken] =
-        tokenHelper.generateTokens(urlSafeUsername);
+    const [refreshToken] = tokenHelper.generateTokens(urlSafeUsername);
 
     // These tokens must have been generated
-    if (!(accessToken && refreshToken)) {
+    if (!refreshToken) {
         throw new InternalServerError('Failed to generate user tokens.');
     }
 
@@ -75,7 +73,6 @@ export async function signup(req: Request, res: Response, next: NextFunction) {
         code: http.CREATED,
         data: {
             obfuscatedEmail: obfuscateEmail(email),
-            accessToken,
             refreshToken,
         },
     });

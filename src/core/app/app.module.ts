@@ -1,5 +1,6 @@
 import { env } from '@config/variables';
 import { authRouter } from '@core/auth';
+import { emailRouter } from '@core/email';
 import express, { NextFunction, Request, Response } from 'express';
 
 import corsOptions from '@config/cors';
@@ -40,6 +41,7 @@ export async function startApplication() {
     });
 
     app.use('/v1/auth', authRouter);
+    app.use('/v1/email', emailRouter);
 
     // Base endpoint
     app.get('/', cache('5 minutes'), (_: Request, res: Response) => {

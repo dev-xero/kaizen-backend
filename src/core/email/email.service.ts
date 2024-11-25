@@ -48,10 +48,5 @@ export async function verify(req: Request, res: Response, next: NextFunction) {
         throw new InternalServerError('Client URL key is missing.');
     }
 
-    const [_, accessToken] = tokenHelper.generateTokens(
-        username as string,
-        true
-    );
-
-    res.redirect(`${clientURL}/auth/signin?token=${accessToken}`);
+    res.redirect(`${clientURL}/auth/login`);
 }

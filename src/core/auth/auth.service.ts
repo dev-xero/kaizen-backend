@@ -141,6 +141,9 @@ export async function signin(req: Request, res: Response, next: NextFunction) {
         }
     );
 
+    // Request is completed
+    logger.info('User signed in successfully.');
+
     res.status(http.OK).json({
         status: 'success',
         message: 'Successfully signed in.',

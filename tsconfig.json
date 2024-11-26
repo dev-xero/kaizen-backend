@@ -32,7 +32,7 @@
             "@utils/*": ["src/utils/*"]
         }
     },
-
+    
     "ts-node": {
         "require": ["tsconfig-paths/register"]
     }

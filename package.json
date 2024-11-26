@@ -10,7 +10,7 @@
         "prisma:fmt": "yarn prisma format",
         "prisma:mgr": "yarn prisma migrate dev --name init",
         "clean": "rm -rf build tsconfig.tsbuildinfo",
-        "build": "tsc && tsc-alias",
+        "build": "tsc && tsc-alias && copyfiles -u 1 \"src/**/*.html\" build/",
         "start:prod": "yarn build && node --experimental-specifier-resolution=node build/server.js",
         "start:dev": "nodemon"
     },
@@ -33,6 +33,7 @@
         "@types/express": "^5.0.0",
         "@types/helmet": "^4.0.0",
         "@types/jsonwebtoken": "^9.0.7",
+        "copyfiles": "^2.4.1",
         "typescript": "^5.6.3"
     },
     "dependencies": {

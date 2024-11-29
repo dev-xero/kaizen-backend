@@ -8,6 +8,6 @@ export const personalTaskSchema = Joi.object({
         .valid('TODO', 'IN_PROGRESS', 'TESTING', 'COMPLETED')
         .required(),
     createdAt: Joi.date().required(),
-    dueOn: Joi.date(),
-    isCompleted: Joi.boolean(),
+    dueOn: Joi.date().required(),
+    isCompleted: Joi.boolean().required(),
 });

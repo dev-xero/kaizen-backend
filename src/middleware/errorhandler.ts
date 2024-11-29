@@ -12,7 +12,6 @@ function globalErrorHandler(
     next: NextFunction
 ) {
     if (err instanceof ApplicationError) {
-        // next()
         res.status(err.statusCode).json({
             status: 'error',
             message: err.message,

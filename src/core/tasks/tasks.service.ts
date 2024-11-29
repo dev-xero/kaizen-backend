@@ -2,8 +2,8 @@ import http from '@constants/http';
 import { BadRequestError } from '@errors/badrequest.error';
 import { UnauthorizedRequestError } from '@errors/unauthorized.error';
 import tasksHelper from '@helpers/tasks.helper';
-import tokenHelper from '@helpers/token.helper';
 import userHelper from '@helpers/user.helper';
+import logger from '@utils/logger';
 import { isPermitted } from '@utils/permissions';
 import { NextFunction, Request, Response } from 'express';
 
@@ -25,7 +25,7 @@ export async function getPersonalTasks(
     const bearerToken = req.headers.authorization!.split('Bearer ')[1];
 
     // The user making this request must have the right token
-    if (!isPermitted(bearerToken, username)) {
+    if (! await isPermitted(bearerToken, username)) {
         throw new UnauthorizedRequestError(
             'You do not have permission to make this request.'
         );
@@ -61,11 +61,13 @@ export async function createPersonalTask(
     next: NextFunction
 ) {
     const { username } = req.params;
+    const { name, description, category, isCompleted, createdAt, dueOn } =
+        req.body;
 
     const bearerToken = req.headers.authorization!.split('Bearer ')[1];
 
     // Check permissions
-    if (!isPermitted(bearerToken, username)) {
+    if (! await isPermitted(bearerToken, username)) {
         throw new UnauthorizedRequestError(
             'You do not have permission to make this request.'
         );
@@ -78,5 +80,22 @@ export async function createPersonalTask(
         throw new BadRequestError('No user with this username exists.');
     }
 
+    const taskEntry = {
+        name,
+        description,
+        category,
+        isCompleted: isCompleted == 'true' || isCompleted == true, // Joi doesn't handle booleans the best way
+        createdAt,
+        dueOn,
+    };
+
     // Create this task if all checks match
+    await tasksHelper.createPersonalTask(thisUser.id, taskEntry);
+
+    logger.info(`Successfully created new task for user: ${username}`);
+
+    res.status(http.CREATED).json({
+        status: 'success',
+        message: 'Successfully created new task.',
+    });
 }

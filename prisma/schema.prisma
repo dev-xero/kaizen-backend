@@ -38,7 +38,7 @@ model Task {
   team        Team?    @relation(fields: [teamId], references: [id], name: "TeamTasks")
   name        String
   description String
-  Category    Category
+  category    Category
   dueOn       DateTime
   createdAt   DateTime
   isCompleted Boolean

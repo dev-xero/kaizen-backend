@@ -78,9 +78,9 @@ class UserHelper {
             if (!(err instanceof PrismaClientKnownRequestError)) {
                 logger.error(err);
                 throw err;
+            } else {
+                return null;
             }
-
-            return null;
         }
     }
 
@@ -92,7 +92,7 @@ class UserHelper {
      */
     public async findUserWithEmail(email: string): Promise<User | null> {
         try {
-            const record = await this.dbClient.user.findUnique({
+            const record = await this.dbClient.user.findFirst({
                 where: { email },
             });
 
@@ -101,8 +101,9 @@ class UserHelper {
             if (!(err instanceof PrismaClientKnownRequestError)) {
                 logger.error(err);
                 throw err;
+            } else {
+                return null;
             }
-            return null;
         }
     }
 
@@ -140,9 +141,9 @@ class UserHelper {
             if (!(err instanceof PrismaClientKnownRequestError)) {
                 logger.error(err);
                 throw err;
+            } else {
+                return null;
             }
-
-            return null;
         }
     }
 

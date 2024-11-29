@@ -107,6 +107,23 @@ class UserHelper {
         }
     }
 
+    public async findUserWithUsername(username: string): Promise<User | null> {
+        try {
+            const record = await this.dbClient.user.findUnique({
+                where: { username },
+            });
+
+            return record;
+        } catch (err) {
+            if (!(err instanceof PrismaClientKnownRequestError)) {
+                logger.error(err);
+                throw err;
+            } else {
+                return null;
+            }
+        }
+    }
+
     /**
      * Updates the user row with the specified details.
      *

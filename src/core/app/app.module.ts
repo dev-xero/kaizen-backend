@@ -12,6 +12,7 @@ import apicache from 'apicache';
 import compression from 'compression';
 import cors from 'cors';
 import helmet from 'helmet';
+import { tasksRouter } from '@core/tasks';
 
 export async function startApplication() {
     const app = express();
@@ -42,6 +43,7 @@ export async function startApplication() {
 
     app.use('/v1/auth', authRouter);
     app.use('/v1/email', emailRouter);
+    app.use('/v1/tasks', tasksRouter);
 
     // Base endpoint
     app.get('/', cache('5 minutes'), (_: Request, res: Response) => {

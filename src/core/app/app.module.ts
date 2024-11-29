@@ -1,6 +1,7 @@
 import { env } from '@config/variables';
 import { authRouter } from '@core/auth';
 import { emailRouter } from '@core/email';
+import { tasksRouter } from '@core/tasks';
 import express, { NextFunction, Request, Response } from 'express';
 
 import corsOptions from '@config/cors';
@@ -12,7 +13,6 @@ import apicache from 'apicache';
 import compression from 'compression';
 import cors from 'cors';
 import helmet from 'helmet';
-import { tasksRouter } from 'src/tasks';
 
 export async function startApplication() {
     const app = express();

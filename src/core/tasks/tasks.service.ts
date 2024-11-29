@@ -3,8 +3,10 @@ import { BadRequestError } from '@errors/badrequest.error';
 import { UnauthorizedRequestError } from '@errors/unauthorized.error';
 import tasksHelper from '@helpers/tasks.helper';
 import userHelper from '@helpers/user.helper';
+import { Task } from '@prisma/client';
 import logger from '@utils/logger';
 import { isPermitted } from '@utils/permissions';
+import { sanitize } from '@utils/sanitizer';
 import { NextFunction, Request, Response } from 'express';
 
 /**
@@ -25,7 +27,7 @@ export async function getPersonalTasks(
     const bearerToken = req.headers.authorization!.split('Bearer ')[1];
 
     // The user making this request must have the right token
-    if (! await isPermitted(bearerToken, username)) {
+    if (!(await isPermitted(bearerToken, username))) {
         throw new UnauthorizedRequestError(
             'You do not have permission to make this request.'
         );
@@ -39,12 +41,21 @@ export async function getPersonalTasks(
     }
 
     // Collect and then return their tasks
-    const thisUsersTasks = await tasksHelper.findUserTasksByUserId(thisUser.id);
+    const thisUserTasks = (await tasksHelper.findUserTasksByUserId(
+        thisUser.id
+    )) as Task[];
+
+    const sanitizedData = [];
+
+    // Sanitize entries
+    for (const userTask of thisUserTasks) {
+        sanitizedData.push(sanitize(userTask, ["teamId", "id", "userId"]));
+    }
 
     res.status(http.OK).json({
         status: 'success',
         message: 'Fetched user tasks.',
-        data: thisUsersTasks,
+        data: sanitizedData,
     });
 }
 
@@ -67,7 +78,7 @@ export async function createPersonalTask(
     const bearerToken = req.headers.authorization!.split('Bearer ')[1];
 
     // Check permissions
-    if (! await isPermitted(bearerToken, username)) {
+    if (!(await isPermitted(bearerToken, username))) {
         throw new UnauthorizedRequestError(
             'You do not have permission to make this request.'
         );

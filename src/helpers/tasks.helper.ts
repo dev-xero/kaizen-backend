@@ -28,3 +28,7 @@ class TasksHelper {
         }
     }
 }
+
+const tasksHelper = new TasksHelper();
+
+export default tasksHelper;

@@ -1,8 +1,10 @@
 import http from '@constants/http';
 import { BadRequestError } from '@errors/badrequest.error';
 import { UnauthorizedRequestError } from '@errors/unauthorized.error';
+import tasksHelper from '@helpers/tasks.helper';
 import tokenHelper from '@helpers/token.helper';
 import userHelper from '@helpers/user.helper';
+import { isPermitted } from '@utils/permissions';
 import { NextFunction, Request, Response } from 'express';
 
 /**
@@ -21,25 +23,28 @@ export async function getPersonalTasks(
 
     // Decoding the provided token, username must match
     const bearerToken = req.headers.authorization!.split('Bearer ')[1];
-    const decoded = await tokenHelper.verityToken(bearerToken);
 
-    if (decoded.username != username) {
+    // The user making this request must have the right token
+    if (!isPermitted(bearerToken, username)) {
         throw new UnauthorizedRequestError(
             'You do not have permission to make this request.'
         );
     }
 
-    // Get this user
+    // Get this user, throw an error if the user doesn't exist
     const thisUser = await userHelper.findUserWithUsername(username);
 
     if (!thisUser) {
         throw new BadRequestError('No user with this username exists.');
     }
 
+    // Collect and then return their tasks
+    const thisUsersTasks = await tasksHelper.findUserTasksByUserId(thisUser.id);
+
     res.status(http.OK).json({
         status: 'success',
         message: 'Fetched user tasks.',
-        data: {},
+        data: thisUsersTasks,
     });
 }
 
@@ -54,4 +59,24 @@ export async function createPersonalTask(
     req: Request,
     res: Response,
     next: NextFunction
-) {}
+) {
+    const { username } = req.params;
+
+    const bearerToken = req.headers.authorization!.split('Bearer ')[1];
+
+    // Check permissions
+    if (!isPermitted(bearerToken, username)) {
+        throw new UnauthorizedRequestError(
+            'You do not have permission to make this request.'
+        );
+    }
+
+    // Get this user, throw an error if the user doesn't exist
+    const thisUser = await userHelper.findUserWithUsername(username);
+
+    if (!thisUser) {
+        throw new BadRequestError('No user with this username exists.');
+    }
+
+    // Create this task if all checks match
+}

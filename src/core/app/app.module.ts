@@ -12,7 +12,7 @@ import apicache from 'apicache';
 import compression from 'compression';
 import cors from 'cors';
 import helmet from 'helmet';
-import { tasksRouter } from '@core/tasks';
+import { tasksRouter } from 'src/tasks';
 
 export async function startApplication() {
     const app = express();

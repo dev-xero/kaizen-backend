@@ -4,6 +4,8 @@ import { createPersonalTask, getPersonalTasks } from './tasks.service';
 import authorized from '@middleware/authorization';
 import rateLimited from '@middleware/ratelimit';
 import asyncHandler from '@utils/async.handler';
+import validated from '@middleware/validator';
+import { personalTaskSchema } from '@schemas/tasks.personal.schema';
 
 export const tasksRouter = Router();
 
@@ -20,5 +22,6 @@ tasksRouter.post(
     '/personal/:username',
     rateLimited,
     authorized,
+    validated(personalTaskSchema),
     asyncHandler(createPersonalTask)
 );

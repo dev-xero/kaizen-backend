@@ -1,8 +1,9 @@
+import { Router } from 'express';
+import { createPersonalTask, getPersonalTasks } from './tasks.service';
+
 import authorized from '@middleware/authorization';
 import rateLimited from '@middleware/ratelimit';
 import asyncHandler from '@utils/async.handler';
-import { Router } from 'express';
-import { createPersonalTask, getPersonalTasks } from './tasks.service';
 
 export const tasksRouter = Router();
 

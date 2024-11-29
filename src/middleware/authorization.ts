@@ -8,7 +8,8 @@ async function authorized(req: Request, res: Response, next: NextFunction) {
         !req.headers.authorization ||
         !req.headers.authorization.startsWith('Bearer ')
     ) {
-        throw new UnauthorizedRequestError('This endpoint is protected.');
+        next(new UnauthorizedRequestError('This endpoint is protected.'));
+        return;
     }
 
     // Verify the sent token
@@ -17,7 +18,8 @@ async function authorized(req: Request, res: Response, next: NextFunction) {
 
     // Token must be valid
     if (!decoded) {
-        throw new UnauthorizedRequestError('Token expired or blacklisted.');
+        next(new UnauthorizedRequestError('Token expired or blacklisted.'));
+        return;
     }
 
     next();

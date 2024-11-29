@@ -8,11 +8,12 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-// Priority level enum
-enum PriorityLevel {
-  LOW
-  MEDIUM
-  HIGH
+// Category level enum
+enum Category {
+  TODO
+  IN_PROGRESS
+  TESTING
+  COMPLETED
 }
 
 // Database user schema
@@ -30,19 +31,17 @@ model User {
 
 // Database task schema
 model Task {
-  id            Int           @id @default(autoincrement())
-  userId        Int
-  teamId        Int?
-  assignedTo    User          @relation(fields: [userId], references: [id], name: "UserTasks")
-  team          Team?         @relation(fields: [teamId], references: [id], name: "TeamTasks")
-  name          String
-  description   String
-  priorityLevel PriorityLevel
-  priorityHex   String
-  tags          String[]
-  dueOn         DateTime
-  createdAt     DateTime
-  isCompleted   Boolean
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  assignedTo  User     @relation(fields: [userId], references: [id], name: "UserTasks")
+  teamId      Int?
+  team        Team?    @relation(fields: [teamId], references: [id], name: "TeamTasks")
+  name        String
+  description String
+  Category    Category
+  dueOn       DateTime
+  createdAt   DateTime
+  isCompleted Boolean
 }
 
 // Database teams schema

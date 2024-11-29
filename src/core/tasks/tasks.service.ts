@@ -1,3 +1,4 @@
+import http from "@constants/http";
 import { NextFunction, Request, Response } from "express";
 
 /**
@@ -8,7 +9,15 @@ import { NextFunction, Request, Response } from "express";
  * @param next Express Next Function.
  */
 export async function getPersonalTasks(req: Request, res: Response, next: NextFunction) {
+    const { username } = req.params;
 
+    console.log("got username:", username);
+
+    res.status(http.OK).json({
+        status: 'success',
+        message: 'Fetched user tasks.',
+        data: {}
+    })
 }
 
 /**

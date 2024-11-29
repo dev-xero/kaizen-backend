@@ -109,7 +109,7 @@ export async function signin(req: Request, res: Response, next: NextFunction) {
         await sendVerificationEmail(existingUser.username, existingUser.email);
 
         res.status(http.UNAUTHORIZED).json({
-            status: 'unauthorized',
+            status: 'not_verified',
             message: 'A new code has been sent to verify your email address.',
             code: http.UNAUTHORIZED,
         });

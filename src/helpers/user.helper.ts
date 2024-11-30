@@ -175,6 +175,7 @@ class UserHelper {
                 this.dbClient.user.findUnique({
                     where: { id: userId },
                     select: {
+                        id: true,
                         username: true,
                         isEmailVerified: true,
                         joinedOn: true,

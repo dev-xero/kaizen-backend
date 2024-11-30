@@ -152,7 +152,7 @@ export async function signin(req: Request, res: Response, next: NextFunction) {
         data: {
             accessToken,
             refreshToken,
-            ...sanitize(existingUser, ['id', 'password', 'joinedOn']),
+            ...sanitize(existingUser, ['password']),
         },
     });
 }

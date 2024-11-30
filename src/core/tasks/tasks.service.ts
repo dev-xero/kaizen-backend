@@ -4,6 +4,7 @@ import { UnauthorizedRequestError } from '@errors/unauthorized.error';
 import tasksHelper from '@helpers/tasks.helper';
 import userHelper from '@helpers/user.helper';
 import { Task } from '@prisma/client';
+import { extractBearerToken } from '@utils/bearer';
 import logger from '@utils/logger';
 import { isPermitted } from '@utils/permissions';
 import { sanitize } from '@utils/sanitizer';
@@ -24,7 +25,11 @@ export async function getPersonalTasks(
     const { username } = req.params;
 
     // Decoding the provided token, username must match
-    const bearerToken = req.headers.authorization!.split('Bearer ')[1];
+    const bearerToken = extractBearerToken(req);
+
+    if (!bearerToken) {
+        throw new UnauthorizedRequestError('Unauthorized, request denied');
+    }
 
     // The user making this request must have the right token
     if (!(await isPermitted(bearerToken, username))) {
@@ -49,7 +54,7 @@ export async function getPersonalTasks(
 
     // Sanitize entries
     for (const userTask of thisUserTasks) {
-        sanitizedData.push(sanitize(userTask, ["teamId", "id", "userId"]));
+        sanitizedData.push(sanitize(userTask, ['teamId', 'id', 'userId']));
     }
 
     res.status(http.OK).json({
@@ -75,7 +80,12 @@ export async function createPersonalTask(
     const { name, description, category, isCompleted, createdAt, dueOn } =
         req.body;
 
-    const bearerToken = req.headers.authorization!.split('Bearer ')[1];
+    // Extract bearer token and ensure validity.
+    const bearerToken = extractBearerToken(req);
+
+    if (!bearerToken) {
+        throw new UnauthorizedRequestError('Unauthorized, request denied');
+    }
 
     // Check permissions
     if (!(await isPermitted(bearerToken, username))) {

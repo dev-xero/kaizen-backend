@@ -9,20 +9,21 @@ class TokenHelper {
     constructor() {}
 
     /**
-     * Generates a refresh and optionally access token from a username.
+     * Generates a refresh and optionally access token from a username and id.
      *
+     * @param id User id to sign the jwt with.
      * @param username Username to sign tokens with.
      * @param withAccess Boolean specifying whether to generate a signed access token with it.
      * @returns An array containing the refresh token and/or access token.
      */
-    public generateTokens(username: string, withAccess = false) {
+    public generateTokens(id: number, username: string, withAccess = false) {
         if (!env.tokens.accessKey || !env.tokens.refreshKey) {
             throw new InternalServerError(
                 'Access or refresh token secret key is missing.'
             );
         }
 
-        const payload = { username };
+        const payload = { id, username };
         let accessToken = null;
 
         if (withAccess) {

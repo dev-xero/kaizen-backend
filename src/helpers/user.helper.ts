@@ -165,6 +165,35 @@ class UserHelper {
     }
 
     /**
+     * Performs a transaction to combine user data with tasks data.
+     *
+     * @param userId Id of the user to query for.
+     */
+    public async getUserInformationFromId(userId: number) {
+        try {
+            const [userRecord] = await this.dbClient.$transaction([
+                this.dbClient.user.findUnique({
+                    where: { id: userId },
+                    select: {
+                        username: true,
+                        isEmailVerified: true,
+                        joinedOn: true,
+                        lastActive: true,
+                        tasks: true,
+                    },
+                }),
+            ]);
+
+            return userRecord;
+        } catch (err) {
+            if (!(err instanceof PrismaClientKnownRequestError)) {
+                logger.error(err);
+                throw err;
+            }
+        }
+    }
+
+    /**
      * Generates a unique verification link for a user and saves it to redis.
      * The link expires in 24 hours.
      *

@@ -119,6 +119,7 @@ export async function signin(req: Request, res: Response, next: NextFunction) {
 
     // The password matches, so generate tokens and save refresh token
     const [accessToken, refreshToken] = tokenHelper.generateTokens(
+        existingUser.id,
         existingUser.username,
         true
     );

@@ -1,7 +1,9 @@
 import http from '@constants/http';
 import { BadRequestError } from '@errors/badrequest.error';
 import { UnauthorizedRequestError } from '@errors/unauthorized.error';
+import tokenHelper from '@helpers/token.helper';
 import userHelper from '@helpers/user.helper';
+import { Task, User } from '@prisma/client';
 import { extractBearerToken } from '@utils/bearer';
 import { isPermitted } from '@utils/permissions';
 import { sanitize } from '@utils/sanitizer';
@@ -41,17 +43,36 @@ export async function getUserInformation(
         );
     }
 
-    const thisUserRecord = await userHelper.findUserWithUsername(username);
+    const { id } = await tokenHelper.verityToken(bearerToken);
+
+    // Database transaction query to combine user information and task data.
+    let thisUserRecord = await userHelper.getUserInformationFromId(id);
 
     // If the username provided somehow doesn't exist, terminate the request.
     if (!thisUserRecord) {
         throw new BadRequestError('No user with this username exists.');
     }
 
+    const sanitizedTasks = [];
+
+    // Remove id fields from each task.
+    for (const task of thisUserRecord.tasks) {
+        sanitizedTasks.push(sanitize(task, ['id', 'userId', 'teamId']));
+    }
+
+    // Cleaned up data safe for consumption.
+    const sanitizedData = {
+        username: thisUserRecord.username,
+        isEmailVerified: thisUserRecord.isEmailVerified,
+        joinedOn: thisUserRecord.joinedOn,
+        lastActive: thisUserRecord.joinedOn,
+        tasks: sanitizedTasks,
+    };
+
     // All checks pass
     res.status(http.OK).json({
         status: 'success',
         message: 'Successfully fetched user record.',
-        data: sanitize(thisUserRecord, ['password', 'id']),
+        data: sanitizedData,
     });
 }

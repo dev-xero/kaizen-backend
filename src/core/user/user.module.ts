@@ -9,7 +9,7 @@ export const userRouter = Router();
 
 // Handles requests to get only the authorized user's information
 userRouter.get(
-    '/user/:username',
+    '/info/:username',
     rateLimited,
     authorized,
     asyncHandler(getUserInformation)

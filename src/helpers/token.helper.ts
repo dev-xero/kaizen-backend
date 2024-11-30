@@ -71,7 +71,8 @@ class TokenHelper {
     public async retrieveRefreshToken(
         username: string
     ): Promise<string | null> {
-        return await redisProvider.client.get(username);
+        const key = `refresh:${username}`;
+        return await redisProvider.client.hget(key, 'token');
     }
 
     /**
@@ -83,7 +84,7 @@ class TokenHelper {
     public async saveRefreshToken(username: string, token: string) {
         const key = `refresh:${username}`;
 
-        await redisProvider.client.hset(key, username, token);
+        await redisProvider.client.hset(key, "token", token);
         await redisProvider.client.expire(key, 172800); // expires in 2 days
     }
 

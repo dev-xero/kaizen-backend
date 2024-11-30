@@ -62,6 +62,7 @@ export async function getUserInformation(
 
     // Cleaned up data safe for consumption.
     const sanitizedData = {
+        id: thisUserRecord.id,
         username: thisUserRecord.username,
         isEmailVerified: thisUserRecord.isEmailVerified,
         joinedOn: thisUserRecord.joinedOn,

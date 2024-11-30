@@ -10,6 +10,7 @@ import { InternalServerError } from '@errors/internal.error';
 import logger from '@utils/logger';
 import emailHelper from '@helpers/email.helper';
 import { sanitize } from '@utils/sanitizer';
+import { UnauthorizedRequestError } from '@errors/unauthorized.error';
 
 /**
  * Processes signup requests.
@@ -153,6 +154,44 @@ export async function signin(req: Request, res: Response, next: NextFunction) {
             accessToken,
             refreshToken,
             ...sanitize(existingUser, ['password']),
+        },
+    });
+}
+
+export async function generate(
+    req: Request,
+    res: Response,
+    next: NextFunction
+) {
+    const { id, username } = req.query;
+
+    if (!(id && username)) {
+        throw new BadRequestError('Malformed request.');
+    }
+
+    const { refresh } = req.body;
+
+    const nId = parseInt(id as string, 10); // ts complains about types
+    const sUsername = username as string;
+
+    // Check that the saved refresh token matches with redis.
+    const savedToken = await tokenHelper.retrieveRefreshToken(sUsername);
+
+    if (savedToken != refresh) {
+        throw new UnauthorizedRequestError(
+            'Permission denied from generating access token.'
+        );
+    }
+
+    // Generate the access token.
+    const [accessToken, _] = tokenHelper.generateTokens(nId, sUsername, true);
+
+    // Everything passes
+    return res.status(http.OK).json({
+        status: 'success',
+        message: 'Successfully generated access token',
+        data: {
+            accessToken,
         },
     });
 }

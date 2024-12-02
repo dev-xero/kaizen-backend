@@ -1,11 +1,15 @@
+import { personalTaskSchema, updatePersonalTaskSchema } from '@schemas/tasks';
 import { Router } from 'express';
-import { createPersonalTask, getPersonalTasks } from './tasks.service';
+import {
+    createPersonalTask,
+    getPersonalTasks,
+    updatePersonalTask,
+} from './tasks.service';
 
 import authorized from '@middleware/authorization';
 import rateLimited from '@middleware/ratelimit';
-import asyncHandler from '@utils/async.handler';
 import validated from '@middleware/validator';
-import { personalTaskSchema } from '@schemas/tasks.personal.schema';
+import asyncHandler from '@utils/async.handler';
 
 export const tasksRouter = Router();
 
@@ -24,4 +28,13 @@ tasksRouter.post(
     authorized,
     validated(personalTaskSchema),
     asyncHandler(createPersonalTask)
+);
+
+// Handles requests to update personal tasks.
+tasksRouter.patch(
+    '/personal/:username',
+    rateLimited,
+    authorized,
+    validated(updatePersonalTaskSchema),
+    asyncHandler(updatePersonalTask)
 );

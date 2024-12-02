@@ -3,7 +3,6 @@ import { BadRequestError } from '@errors/badrequest.error';
 import { UnauthorizedRequestError } from '@errors/unauthorized.error';
 import tokenHelper from '@helpers/token.helper';
 import userHelper from '@helpers/user.helper';
-import { Task, User } from '@prisma/client';
 import { extractBearerToken } from '@utils/bearer';
 import { isPermitted } from '@utils/permissions';
 import { sanitize } from '@utils/sanitizer';
@@ -57,7 +56,7 @@ export async function getUserInformation(
 
     // Remove id fields from each task.
     for (const task of thisUserRecord.tasks) {
-        sanitizedTasks.push(sanitize(task, ['id', 'userId', 'teamId']));
+        sanitizedTasks.push(sanitize(task, ['userId', 'teamId']));
     }
 
     // Cleaned up data safe for consumption.

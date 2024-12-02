@@ -28,7 +28,7 @@ export async function getPersonalTasks(
     const bearerToken = extractBearerToken(req);
 
     if (!bearerToken) {
-        throw new UnauthorizedRequestError('Unauthorized, request denied');
+        throw new UnauthorizedRequestError('Unauthorized, request denied.');
     }
 
     // The user making this request must have the right token
@@ -54,7 +54,7 @@ export async function getPersonalTasks(
 
     // Sanitize entries
     for (const userTask of thisUserTasks) {
-        sanitizedData.push(sanitize(userTask, ['teamId', 'id', 'userId']));
+        sanitizedData.push(sanitize(userTask, ['teamId', 'userId']));
     }
 
     res.status(http.OK).json({
@@ -84,7 +84,7 @@ export async function createPersonalTask(
     const bearerToken = extractBearerToken(req);
 
     if (!bearerToken) {
-        throw new UnauthorizedRequestError('Unauthorized, request denied');
+        throw new UnauthorizedRequestError('Unauthorized, request denied.');
     }
 
     // Check permissions
@@ -118,5 +118,44 @@ export async function createPersonalTask(
     res.status(http.CREATED).json({
         status: 'success',
         message: 'Successfully created new task.',
+    });
+}
+
+/**
+ * Updates personal tasks for a user.
+ *
+ * @param req Request object.
+ * @param res Response object.
+ * @param next Express Next Function.
+ */
+export async function updatePersonalTask(
+    req: Request,
+    res: Response,
+    next: NextFunction
+) {
+    const { username } = req.params;
+    const { tasks } = req.body;
+
+    // Again, decoding the provided token, username must match
+    const bearerToken = extractBearerToken(req);
+
+    if (!bearerToken) {
+        throw new UnauthorizedRequestError('Unauthorized, request denied.');
+    }
+
+    // The user making this request must have the right token
+    if (!(await isPermitted(bearerToken, username))) {
+        throw new UnauthorizedRequestError(
+            'You do not have permission to make this request.'
+        );
+    }
+
+    // Db tx to update tasks here
+    await tasksHelper.updatePersonalTask(tasks);
+    logger.info(`Successfully batch updated personal tasks for: ${username}.`);
+
+    res.status(http.OK).json({
+        status: 'success',
+        message: 'User tasks updated successfully.',
     });
 }

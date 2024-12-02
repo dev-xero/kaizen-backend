@@ -1,12 +1,11 @@
-import { signInSchema } from '@schemas/signin.schema';
-import { signUpSchema } from '@schemas/signup.schema';
+import { genAccessSchema } from '@schemas/auth';
+import { signInSchema, signUpSchema } from '@schemas/auth/';
 import { Router } from 'express';
 import { generate, signin, signup } from './auth.service';
 
 import rateLimited from '@middleware/ratelimit';
 import validated from '@middleware/validator';
 import asyncHandler from '@utils/async.handler';
-import { genAccessSchema } from '@schemas/genAccess.schema';
 
 export const authRouter = Router();
 

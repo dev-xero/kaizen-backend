@@ -1,3 +1,4 @@
+import { InternalServerError } from '@errors/internal.error';
 import { Task } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import databaseProvider from '@providers/database.provider';
@@ -20,6 +21,11 @@ class TasksHelper {
 
     constructor() {}
 
+    /**
+     * Asynchronously attempts to find all tasks belonging to this user by id.
+     *
+     * @param id Valid user id.
+     */
     async findUserTasksByUserId(id: number): Promise<Task[] | null> {
         try {
             const record = await this.dbClient.task.findMany({
@@ -37,6 +43,12 @@ class TasksHelper {
         }
     }
 
+    /**
+     * Asynchronously attempts to create a new user task.
+     *
+     * @param userId Valid user id.
+     * @param entry Task entry with validated fields.
+     */
     async createPersonalTask(userId: number, entry: TaskEntry) {
         try {
             await this.dbClient.task.create({
@@ -54,9 +66,44 @@ class TasksHelper {
             if (!(err instanceof PrismaClientKnownRequestError)) {
                 logger.error(err);
                 throw err;
-            } else {
-                return null;
             }
+        }
+    }
+
+    /**
+     * Asynchronously updates user personal tasks.
+     *
+     * @param tasks An array of tasks to process.
+     */
+    async updatePersonalTask(tasks: Task[]) {
+        const taskUpdatePromises = tasks.map((task) => {
+            const {
+                id,
+                name,
+                description,
+                category,
+                dueOn,
+                createdAt,
+                isCompleted,
+            } = task;
+
+            return this.dbClient.task.update({
+                where: { id },
+                data: {
+                    name,
+                    description,
+                    category,
+                    isCompleted,
+                    createdAt: new Date(createdAt),
+                    dueOn: new Date(dueOn),
+                },
+            });
+        });
+
+        try {
+            await Promise.all(taskUpdatePromises);
+        } catch (err) {
+            throw new InternalServerError('Unable to update tasks.');
         }
     }
 }

@@ -15,11 +15,14 @@ Source code for Kaizen's backend. Kaizen is a web-native collaborative task mana
 - Passwords are hashed before storing in the database.
 - User verification is required before accessing protected endpoints, users are verified via email.
 - Adheres to industry best practices with abstraction and encapsulation via OOP.
+- Rate limiting to minimize / prevent API abuse.
+- Deployment via Docker images.
 
 ## Technologies Used
 
 - NodeJS (Typescript & ExpressJS): asynchronous server-side js runtime engine.
 - PostgreSQL: for primary persistent application data.
+- Prisma: ORM for working with PostgreSQL.
 - Redis: for fast key-value caching.
 - MailerSend: for sending emails securely.
 - Docker: for containerization & deployments.

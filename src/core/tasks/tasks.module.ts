@@ -2,6 +2,7 @@ import { personalTaskSchema, updatePersonalTaskSchema } from '@schemas/tasks';
 import { Router } from 'express';
 import {
     createPersonalTask,
+    deletePersonalTask,
     getPersonalTasks,
     updatePersonalTask,
 } from './tasks.service';
@@ -38,3 +39,11 @@ tasksRouter.patch(
     validated(updatePersonalTaskSchema),
     asyncHandler(updatePersonalTask)
 );
+
+// Handles requests to delete personal tasks.
+tasksRouter.delete(
+    '/personal/:username',
+    rateLimited,
+    authorized,
+    asyncHandler(deletePersonalTask)
+)

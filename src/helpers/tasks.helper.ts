@@ -103,6 +103,18 @@ class TasksHelper {
         try {
             await Promise.all(taskUpdatePromises);
         } catch (err) {
+            logger.error(err);
+            throw new InternalServerError('Unable to update tasks.');
+        }
+    }
+
+    async deletePersonalTask(taskId: number) {
+        try {
+            await this.dbClient.task.delete({
+                where: { id: taskId },
+            });
+        } catch (err) {
+            logger.error(err);
             throw new InternalServerError('Unable to update tasks.');
         }
     }

@@ -159,3 +159,36 @@ export async function updatePersonalTask(
         message: 'User tasks updated successfully.',
     });
 }
+
+export async function deletePersonalTask(
+    req: Request,
+    res: Response,
+    next: NextFunction
+) {
+    const { username } = req.params;
+    const { id } = req.query;
+
+    // Again, decoding the provided token, username must match
+    const bearerToken = extractBearerToken(req);
+
+    if (!bearerToken) {
+        throw new UnauthorizedRequestError('Unauthorized, request denied.');
+    }
+
+    // The user making this request must have the right token
+    if (!(await isPermitted(bearerToken, username))) {
+        throw new UnauthorizedRequestError(
+            'You do not have permission to make this request.'
+        );
+    }
+
+    // DB tx to delete specific task
+    await tasksHelper.deletePersonalTask(parseInt(id as string, 10));
+
+    logger.info(`Successfully deleted tasks for user: ${username}`);
+
+    res.status(http.OK).json({
+        status: 'success',
+        message: 'Deleted personal task successfully.',
+    });
+}

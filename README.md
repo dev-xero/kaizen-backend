@@ -27,6 +27,37 @@ Source code for Kaizen's backend. Kaizen is a web-native collaborative task mana
 - MailerSend: for sending emails securely.
 - Docker: for containerization & deployments.
 
+## API Endpoints
+
+An overview of API endpoints that are available. The core API features are accessible through the `/v1` prefix.
+
+1. Base:
+   1. [GET] `/` - Base endpoint, returns 200 OK if the server is running.
+
+   2. [GET] `/health` - Used to check API health status, 200 if server is healthy.
+
+2. Authentication:
+   1. [POST] `/auth/signup` - Validates credentials and attempts to create a new Kaizen user.
+
+   2. [POST] `/auth/signin` - Validates credentials and attempts to login authorized users. Will generate a verification link if the user is not verified.
+
+   3. [POST] `/auth/generate` - This endpoint generates verification links for successfully created users. The link is only valid for 24 hours.
+
+3. Email:
+   1. [GET] `/email/verify` - This endpoint attempts to verify users based on a previously generated code. 
+
+4. User:
+   1. [GET] `/user/info/:username` - This endpoint returns information about the currently authorized user, rejects the request otherwise.
+   
+5. Task:
+    1. [GET] `/task/personal/:username` - Returns all tasks belonging to the authorized user, rejects the request otherwise.
+
+    2. [POST] `/task/personal/:username` - Creates a personal task for the currently authorized user, rejects otherwise.
+
+    3. [PATCH] `/task/personal/:username` - Batch updates the currently authorized user tasks, rejects request otherwise.
+    
+    4. [DELETE] `/task/personal/:username?id=ID` - Deletes a singular task with the provided id for the authorized user, rejects request otherwise.
+
 ## Configuration (Linux & Unix Environments)
 
 After cloning the repository, you can setup a local instance by following these steps:
